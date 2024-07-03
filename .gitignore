@@ -1,6 +1,5 @@
 __pycache__
-blog_generator_env
+env
 vector_database
 *.json
-models
 cred.env

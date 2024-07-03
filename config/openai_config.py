@@ -1,43 +1,38 @@
 import openai
 import os
-from dotenv import load_dotenv, dotenv_values 
+from dotenv import load_dotenv
 
 load_dotenv("./cred.env")
 
+openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.azure_endpoint = os.getenv("OPEN_AI_ENDPOINT")
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-
-openai.api_key = OPENAI_API_KEY
-
-
+openai.api_type = "azure"
+openai.api_version = "2024-02-01"
 
 def get_completion(query):
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=query,
-        temperature=0,
+    response = openai.chat.completions.create(
+        model=os.getenv("OPEN_AI_DEPLOYMENT_ID"),
+        messages=[
+            {"role": "user", "content": query}
+        ],
     )
-    return response
+    return response.choices[0].message.content  
 
+def generate_image(heading: str)->str:
+  
+  PROMPT = f"""
+  Ganerate an image for below article
+  article heading:  {heading}
+  """
 
-def azure_get_completion(query):
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=query,
-        temperature=0,
-        api_endpoint=os.getenv("OPEN_AI_AZURE_ENDPOINT"),
-        
-    )
-    return response
+  response = openai.images.generate(
+    model="dalle3",
+    prompt=PROMPT,
+    size="1024x1024",
+    quality="standard",
+    n=1,
+  )
 
-def generate_images(prompt):
-    response = openai.Completion.create(
-        engine="dalle-2",
-        prompt=prompt,
-        temperature=0.3,
-        n=1,
-        stop=None,
-        max_tokens=10000,
-    )
-    return response
+  image_url = response.data[0].url
+  return image_url

@@ -3,6 +3,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from api.blog_generator.controller import router as blog_router
+from api.scrape_articles.controller import router as scrape_router
 
 _app =  FastAPI(
     title='Rag Fusion API',
@@ -12,6 +13,7 @@ _app =  FastAPI(
 
 # Adding router to different API groups.
 _app.include_router(blog_router)
+_app.include_router(scrape_router)
 
 @_app.get('/')
 def check():

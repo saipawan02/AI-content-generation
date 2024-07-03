@@ -4,3 +4,8 @@ uvicorn
 google-generativeai
 langchain
 python-dotenv
+chromadb
+
+bs4
+feedparser
+pandas
