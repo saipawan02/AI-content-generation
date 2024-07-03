@@ -1,10 +1,9 @@
 from pydantic import BaseModel
-from datetime import datetime
 
 class Article(BaseModel):
-    Date: datetime
+    Date: str
     Title: str
     Summary: str|None = None
     Content: str
-    Tags: list|None = None
+    Tags: str|None = None
     Image_url: str|None = None

@@ -21,7 +21,7 @@ You are an AI assistant who will generate multiple blogs related to the given li
 
     examples = "Below are the list of "
     for ndx, article in enumerate(articles):
-        examples += "Article " + str(ndx + 1) + ": " + str(article) + "\n\n"
+        examples += "Article " + str(ndx + 1) + ": " + str(article.Content) + "\n\n"
 
 
     footer = """
@@ -37,13 +37,13 @@ return the resoponse in the folloing JSON format:
         Title: <blog-Heading>,
         Content: <ganerated-blog>,
         Summary: <ganerated-blog-summary>,
-        tags: [<tag1>, <tag2>, <tag3>],
+        Tags: [<tag1>, <tag2>, <tag3>],
     },
     {
         Title: <blog-Heading>,
         Content: <ganerated-blog>,
         Summary: <ganerated-blog-summary>,
-        tags: [<tag1>, <tag2>, <tag3>],
+        Tags: [<tag1>, <tag2>, <tag3>],
     }
 ]
 
@@ -52,17 +52,27 @@ and only provide json object in the response with no extra spaces and content or
 """
 
     query = header + examples + footer
-    print(query)
-    generated_blogs = json.loads(get_completion(query))
 
-    for blog in generate_blogs:
-        upload_article(Article(
-            Date = datetime.now(),
+    response = get_completion(query)
+    # print("Response:", response)
+    generated_blogs = json.loads(response)
+    # print("Generated Blogs:", generated_blogs)
+
+    api_response: list[Article] = []
+    for blog in generated_blogs:
+        print(blog)
+        article = Article(
+            Date = str(datetime.now()),
             Title = blog['Title'],
             Summary = blog['Summary'],
             Content = blog['Content'],
-            Tags = blog['Tags'],
+            Tags = json.dumps(blog['Tags']),
             Image_url= generate_image(blog['Title'])
-        ))
+        )
 
-    return generated_blogs
+        upload_article(article)
+        api_response.append(article)
+
+    return api_response
+
+

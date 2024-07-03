@@ -73,7 +73,7 @@ def web_crawler(rss_feed_urls: list[str]) -> list[Article]:
             
             scrapped_articles.append(
                 Article(
-                    Date = date,
+                    Date = str(date),
                     Title = title,
                     Summary = summary_text,
                     Content = article
