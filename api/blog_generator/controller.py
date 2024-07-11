@@ -13,7 +13,7 @@ router = APIRouter(
 )
 
 @router.post('/article')
-async def generate_blogs(articles: list[Article]) -> list[Article]:
+def generate_blogs(articles: list[Article]) -> list[Article]:
 
     header = f"""
 You are an AI assistant who will generate multiple blogs related to the given list of articles.
@@ -62,7 +62,7 @@ and only provide json object in the response with no extra spaces and content or
     for blog in generated_blogs:
         print(blog)
         article = Article(
-            Date = str(datetime.now()),
+            Date = str(datetime.now().date().strftime("%d-%m-%Y")),
             Title = blog['Title'],
             Summary = blog['Summary'],
             Content = blog['Content'],
@@ -74,5 +74,3 @@ and only provide json object in the response with no extra spaces and content or
         api_response.append(article)
 
     return api_response
-
-

@@ -1,23 +1,29 @@
 import openai
+
+from openai import AzureOpenAI
 import os
 from dotenv import load_dotenv
 
 load_dotenv("./cred.env")
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
-openai.azure_endpoint = os.getenv("OPEN_AI_ENDPOINT")
+client = AzureOpenAI(
+   api_key=os.getenv("OPENAI_API_KEY"),
+  #  azure_deployment=os.getenv("OPEN_AI_DEPLOYMENT_ID"),
+   api_version="2024-02-01",
+   azure_endpoint=os.getenv("OPEN_AI_ENDPOINT"),
+)
 
-openai.api_type = "azure"
-openai.api_version = "2024-02-01"
-
-def get_completion(query):
-    response = openai.chat.completions.create(
-        model=os.getenv("OPEN_AI_DEPLOYMENT_ID"),
-        messages=[
-            {"role": "user", "content": query}
-        ],
+def get_completion(query: str) -> str:
+    response = client.chat.completions.create(
+      model=os.getenv("OPEN_AI_DEPLOYMENT_ID"),
+      messages=[
+          {"role": "user", "content": query}
+      ],
+      # response_format={ "type": "json_object" }
     )
-    return response.choices[0].message.content  
+
+    return response.choices[0].message.content
+
 
 def generate_image(heading: str)->str:
   
@@ -26,7 +32,7 @@ def generate_image(heading: str)->str:
   article heading:  {heading}
   """
 
-  response = openai.images.generate(
+  response = client.images.generate(
     model="dalle3",
     prompt=PROMPT,
     size="1024x1024",

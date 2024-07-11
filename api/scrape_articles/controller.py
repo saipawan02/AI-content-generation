@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 @router.post("/urls")
-async def scrape_article_url(urls: list[str]) -> list[Article]:
+def scrape_article_url(urls: list[str]) -> list[Article]:
     """
     The Function will use the URL and fetch the articles from the Website.
     The Fetched articles will be then check in the vector database is similar set 
@@ -32,7 +32,7 @@ async def scrape_article_url(urls: list[str]) -> list[Article]:
             similarity_scores = [0]
         for score in similarity_scores:
             if score > 0.8:
-                print(f"Skipping article: {article['Title']} as similar article is already present in the database.")
+                print(f"Skipping article: {article.Title} as similar article is already present in the database.")
                 continue
             else:
                 unique_new_articles.append(article)

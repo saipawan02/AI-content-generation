@@ -22,7 +22,18 @@ def get_similar_articles(article):
     return docs_score
 
 def get_article_by_date(date: datetime):
-    docs = collection.search(query=f"Date:{date.strftime('%Y-%m-%d')}", k=100)
-    return [doc.metadata for doc in docs]
+    date = datetime.strptime(date, '%d-%m-%Y')
+    docs = collection.get(where={'Date': date})
+    return docs["metadatas"]
 
+def get_all_articles():
+    docs = collection.get()
+    print(docs)
+    return docs["metadatas"]
 
+def clear_collection():
+    collection.delete(where={})
+
+def clear_collection_by_date(date: datetime):
+    date = datetime.strptime(date, '%d-%m-%Y')
+    collection.delete(where={'Date': date})
