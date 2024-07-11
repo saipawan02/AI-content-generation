@@ -1,5 +1,3 @@
-import openai
-
 from openai import AzureOpenAI
 import os
 from dotenv import load_dotenv
@@ -37,8 +35,9 @@ def generate_image(heading: str)->str:
     prompt=PROMPT,
     size="1024x1024",
     quality="standard",
+    response_format='b64_json',
     n=1,
   )
 
-  image_url = response.data[0].url
-  return image_url
+  Image_base64 = response.data[0].b64_json
+  return Image_base64

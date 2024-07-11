@@ -67,7 +67,7 @@ and only provide json object in the response with no extra spaces and content or
             Summary = blog['Summary'],
             Content = blog['Content'],
             Tags = json.dumps(blog['Tags']),
-            Image_url= generate_image(blog['Title'])
+            Image_base64= generate_image(blog['Title'])
         )
 
         upload_article(article)

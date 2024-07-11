@@ -6,4 +6,4 @@ class Article(BaseModel):
     Summary: str|None = None
     Content: str
     Tags: str|None = None
-    Image_url: str|None = None
+    Image_base64: str|None = None
