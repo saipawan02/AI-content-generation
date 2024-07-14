@@ -55,7 +55,12 @@ and only provide json object in the response with no extra spaces and content or
 
     response = get_completion(query)
     # print("Response:", response)
-    generated_blogs = json.loads(response)
+    while True:
+        try:
+            generated_blogs = json.loads(response)
+            break
+        except:
+            print("Invalid JSON response. Retrying...")
     # print("Generated Blogs:", generated_blogs)
 
     api_response: list[Article] = []

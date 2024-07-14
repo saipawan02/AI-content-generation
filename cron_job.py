@@ -16,4 +16,5 @@ if len(scraped_blogs) > 5:
     scraped_blogs = scraped_blogs[:5]
 
 print("____________GENERATED BLOGS____________")
+
 print(generate_blogs(scraped_blogs))
