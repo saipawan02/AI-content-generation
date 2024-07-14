@@ -3,3 +3,4 @@ env
 vector_database
 *.json
 cred.env
+Images
