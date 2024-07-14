@@ -79,8 +79,8 @@ and only provide json object in the response with no extra spaces and content or
         # Gnenerate image
         image_base64 = generate_image(blog['Title'])
         # Store image
-        uuid_name = str(uuid4()) + '.jpg'
-        image_path = os.path.join('Images', uuid_name)
+        uuid_id = str(uuid4())
+        image_path = os.path.join('Images', uuid_id +  + '.jpg')
         with open(image_path, 'wb') as img_file:
             img_file.write(base64.b64decode(image_base64))
 
@@ -91,7 +91,7 @@ and only provide json object in the response with no extra spaces and content or
             Summary = blog['Summary'],
             Content = blog['Content'],
             Tags = json.dumps(blog['Tags']),
-            Image_base64 = uuid_name
+            Image_id = uuid_id
         )
 
         upload_article(article)
