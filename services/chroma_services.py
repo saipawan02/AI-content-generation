@@ -6,7 +6,7 @@ from models.Article import Article
 def upload_article(article: Article):
     article = dict(article)
 
-    content = article.pop('Content')
+    content = article['Content']
 
     collection.add(
         documents=content,
@@ -28,7 +28,9 @@ def get_article_by_date(date: str):
 
 def get_all_articles():
     docs = collection.get()
-    print(docs)
+    
+    print(docs['documents'])
+
     return docs["metadatas"]
 
 def clear_collection():

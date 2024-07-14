@@ -1,4 +1,8 @@
+import os
 import json
+import traceback
+from uuid import uuid4
+import base64
 from fastapi import APIRouter
 from datetime import datetime
 
@@ -11,6 +15,9 @@ router = APIRouter(
     prefix= '/blog-generator',
     tags= ['blog-generator']
 )
+
+if not os.path.exists("Images"):
+    os.mkdir("Images")
 
 @router.post('/article')
 def generate_blogs(articles: list[Article]) -> list[Article]:
@@ -53,32 +60,38 @@ and only provide json object in the response with no extra spaces and content or
 
     query = header + examples + footer
 
-    
-    # print("Response:", response)
-
     response = None
     counter = 0
     while True:
         try:
             response = get_completion(query)
+            print(response)
             generated_blogs = json.loads(response)
             break
         except:
+            print(traceback.print_exc())
             counter += 1
             print(f"Invalid JSON response. Retrying... {counter}")
-            
-    # print("Generated Blogs:", generated_blogs)
 
     api_response: list[Article] = []
     for blog in generated_blogs:
-        print(blog)
+
+        # Gnenerate image
+        image_base64 = generate_image(blog['Title'])
+        # Store image
+        uuid_name = str(uuid4()) + '.jpg'
+        image_path = os.path.join('Images', uuid_name)
+        with open(image_path, 'wb') as img_file:
+            img_file.write(base64.b64decode(image_base64))
+
+
         article = Article(
             Date = str(datetime.now().date().strftime("%d-%m-%Y")),
             Title = blog['Title'],
             Summary = blog['Summary'],
             Content = blog['Content'],
             Tags = json.dumps(blog['Tags']),
-            Image_base64= generate_image(blog['Title'])
+            Image_base64 = uuid_name
         )
 
         upload_article(article)

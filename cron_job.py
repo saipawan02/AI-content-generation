@@ -12,8 +12,9 @@ scraped_blogs = scrape_article_url(url)
 
 
 # Sending max 5 articles as context restriction.
-if len(scraped_blogs) > 5:
-    scraped_blogs = scraped_blogs[:5]
+no_of_articles = 1
+if len(scraped_blogs) > no_of_articles:
+    scraped_blogs = scraped_blogs[:no_of_articles]
 
 print("____________GENERATED BLOGS____________")
 

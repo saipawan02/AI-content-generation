@@ -1,6 +1,8 @@
+import os
 import uvicorn
-from datetime import datetime
+
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 
 import services.chroma_services as chroma_services
 from api.blog_generator.controller import router as blog_router
@@ -56,6 +58,16 @@ async def get_all_articles():
     """
     return chroma_services.get_all_articles()
 
+@_app.get('/image/{uuid}',)
+async def get_image_by_uuid(uuid: str):
+    """
+    Args:
+        uuid (str): The UUID of the image to be fetched.
+    
+    Returns:
+        str: The base64 encoded image data.
+    """
+    return FileResponse(os.path.join("Images", f"{uuid}.jpg"), media_type="image/jpg")
 
 if __name__ == "__main__":
     uvicorn.run(app='main:_app', host='0.0.0.0', port=3000)
