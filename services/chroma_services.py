@@ -21,8 +21,8 @@ def get_similar_articles(article):
         )
     return docs_score
 
-def get_article_by_date(date: datetime):
-    date = datetime.strptime(date, '%d-%m-%Y')
+def get_article_by_date(date: str):
+    # date = datetime.strptime(date, '%d-%m-%Y')
     docs = collection.get(where={'Date': date})
     return docs["metadatas"]
 
