@@ -80,7 +80,7 @@ and only provide json object in the response with no extra spaces and content or
         image_base64 = generate_image(blog['Title'])
         # Store image
         uuid_id = str(uuid4())
-        image_path = os.path.join('Images', uuid_id +  + '.jpg')
+        image_path = os.path.join('Images', uuid_id + '.jpg')
         with open(image_path, 'wb') as img_file:
             img_file.write(base64.b64decode(image_base64))
 
