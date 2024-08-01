@@ -73,7 +73,12 @@ and only provide json object in the response with no extra spaces and content or
             counter += 1
             print(f"Invalid JSON response. Retrying... {counter}")
 
-    api_response: list[Article] = []
+
+    api_response: list[Article] = []    
+    
+    if type(generated_blogs) != list:
+        generated_blogs = [generated_blogs]
+    
     for blog in generated_blogs:
 
         # Gnenerate image
