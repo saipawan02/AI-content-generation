@@ -38,21 +38,23 @@ Note:
 # Make sure the content is not repeated among the blogs and each blog that is generated should be unique.
 # blog content should be a string and render it in .md format and put \n instad of new line in the blog.
 
-return the resoponse in the folloing JSON format:
-[
-    {
-        Title: <blog-Heading>,
-        Content: <ganerated-blog>,
-        Summary: <ganerated-blog-summary>,
-        Tags: [<tag1>, <tag2>, <tag3>],
-    },
-    {
-        Title: <blog-Heading>,
-        Content: <ganerated-blog>,
-        Summary: <ganerated-blog-summary>,
-        Tags: [<tag1>, <tag2>, <tag3>],
-    }
-]
+### return the resoponse in the folloing JSON format:
+{
+    response: [
+        {
+            Title: <blog-Heading>,
+            Content: <ganerated-blog>,
+            Summary: <ganerated-blog-summary>,
+            Tags: [<tag1>, <tag2>, <tag3>],
+        },
+        {
+            Title: <blog-Heading>,
+            Content: <ganerated-blog>,
+            Summary: <ganerated-blog-summary>,
+            Tags: [<tag1>, <tag2>, <tag3>],
+        }
+    ]
+}
 
 do not assign tags as a part of generated blog, provide them as an different field in the final response, 
 and only provide json object in the response with no extra spaces and content or any other characters.
@@ -65,10 +67,11 @@ and only provide json object in the response with no extra spaces and content or
     while True:
         try:
             response = get_completion(query)
-            print(response)
-            generated_blogs = json.loads(response)
+            response =  json.loads(response)
+            generated_blogs = response["response"]
             break
         except:
+            print(response)
             print(traceback.print_exc())
             counter += 1
             print(f"Invalid JSON response. Retrying... {counter}")
