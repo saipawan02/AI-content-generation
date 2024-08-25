@@ -7,7 +7,7 @@ from fastapi import APIRouter
 from datetime import datetime
 
 from config.openai_config import get_completion
-from services.chroma_services import upload_article
+from services.chroma_services import get_similar_articles, upload_article
 from config.openai_config import generate_image
 from models.Article import Article
 
@@ -84,14 +84,31 @@ and only provide json object in the response with no extra spaces and content or
     
     for blog in generated_blogs:
 
+        blog['Content'] = blog['Content'].replace("#", " ")
+
+        # Check if the article is already present in the database
+        similarity_scores = dict(get_similar_articles(blog["Content"]))['distances'][0]
+        if len(similarity_scores) == 0:
+            similarity_scores = [0]
+
+        skip_blog = False
+        for score in similarity_scores:
+            if score > 0.8:
+                print(f"Skipping article: {blog['Title']} as similar article is already generated in the database.")
+                skip_blog = True
+                continue
+
+        if skip_blog:
+            continue
+
         # Gnenerate image
         image_base64 = generate_image(blog['Title'])
+
         # Store image
         uuid_id = str(uuid4())
         image_path = os.path.join('Images', uuid_id + '.jpg')
         with open(image_path, 'wb') as img_file:
             img_file.write(base64.b64decode(image_base64))
-
 
         article = Article(
             Date = str(datetime.now().date().strftime("%d-%m-%Y")),

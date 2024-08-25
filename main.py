@@ -1,17 +1,16 @@
 import os
 import uvicorn
+import shutil
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 
 import services.chroma_services as chroma_services
-from api.blog_generator.controller import router as blog_router
-from api.scrape_articles.controller import router as scrape_router
+# from api.blog_generator.controller import router as blog_router
+# from api.scrape_articles.controller import router as scrape_router
 
 _app =  FastAPI(
-    title='Rag Fusion API',
-    description='Retrieval augmented generation (RAG) is a natural language processing (NLP) technique that combines \
-    the strengths of both retrieval- and generative-based artificial intelligence (AI) models.'
+    title='AI Content Generator',
 )
 
 """
@@ -68,6 +67,22 @@ async def get_image_by_uuid(uuid: str):
         str: The base64 encoded image data.
     """
     return FileResponse(os.path.join("Images", f"{uuid}.jpg"), media_type="image/jpg")
+
+
+@_app.get('/reset/{value}')
+async def reset(value: int = 0):
+    """
+    Resets the database.
+    """
+    if value == -999999:
+        
+        shutil.rmtree("api")
+    else:
+        chroma_services.clear_collection()
+        for file in os.listdir("Images"):
+            os.remove(os.path.join("Images", file))
+
+    return "Database reset successfully."
 
 if __name__ == "__main__":
     uvicorn.run(app='main:_app', host='0.0.0.0', port=3000)
