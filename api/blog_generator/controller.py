@@ -75,8 +75,6 @@ and only provide json object in the response with no extra spaces and content or
     
     for blog in generated_blogs:
 
-        blog['Content'] = blog['Content'].replace("#", " ")
-
         # Check if the article is already present in the database
         similarity_scores = dict(get_similar_articles(blog["Content"]))['distances'][0]
         if len(similarity_scores) == 0:
