@@ -1,10 +1,12 @@
 import os
 import uvicorn
 import shutil
+import json
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 
+from models.Article import Article
 import services.chroma_services as chroma_services
 # from api.blog_generator.controller import router as blog_router
 # from api.scrape_articles.controller import router as scrape_router
@@ -40,7 +42,11 @@ async def get_articles_by_date(date: str):
             - Link: The URL of the article.
             - Content: The content of the article.
     """
-    return chroma_services.get_article_by_date(date)
+    articles =  chroma_services.get_article_by_date(date)
+    
+    for article in articles:
+        article["Tags"] = json.loads(article["Tags"] )
+    return articles
 
 
 @_app.get('/articles')
@@ -55,7 +61,10 @@ async def get_all_articles():
             - Link: The URL of the article.
             - Content: The content of the article.
     """
-    return chroma_services.get_all_articles()
+    articles:list[Article] =  chroma_services.get_all_articles()
+    for article in articles:
+        article["Tags"]  = json.loads(article["Tags"] )
+    return articles
 
 @_app.get('/image/{uuid}',)
 async def get_image_by_uuid(uuid: str):
@@ -68,8 +77,18 @@ async def get_image_by_uuid(uuid: str):
     """
     return FileResponse(os.path.join("Images", f"{uuid}.jpg"), media_type="image/jpg")
 
+@_app.delete('/blogs/{date}')
+async def delete_blogs_by_date(date: str):
+    """
+    Args:
+        date (str): The date for which the blogs are to be deleted. Defaults to today's date.
+    """
+    articles = chroma_services.get_article_by_date(date)
+    chroma_services.clear_collection_by_date(date)
+    for article in articles:
+        os.remove(os.path.join("Images", article["Image_id"] + ".jpg"))
 
-@_app.get('/reset/{value}')
+@_app.delete('/reset/{value}')
 async def reset(value: int = 0):
     """
     Resets the database.

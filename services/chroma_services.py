@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from config.chroma_config import collection
+from config.chroma_config import collection, client
 from models.Article import Article
 
 def upload_article(article: Article):
@@ -28,14 +28,12 @@ def get_article_by_date(date: str):
 
 def get_all_articles():
     docs = collection.get()
-    
     print(docs['documents'])
-
     return docs["metadatas"]
 
 def clear_collection():
-    collection.delete(where={})
-
+    client.delete_collection(name="chroma_collection")
+    
 def clear_collection_by_date(date: datetime):
-    date = datetime.strptime(date, '%d-%m-%Y')
+    # date = datetime.strptime(date, '%d-%m-%Y')
     collection.delete(where={'Date': date})

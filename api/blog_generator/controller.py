@@ -23,7 +23,7 @@ if not os.path.exists("Images"):
 def generate_blogs(articles: list[Article]) -> list[Article]:
 
     header = f"""
-You are an AI assistant who will generate multiple blogs related to the given list of articles.
+You are an AI assistant who will generate a blog related to the given list of articles.
 """
 
     examples = "Below are the list of "
@@ -35,25 +35,17 @@ You are an AI assistant who will generate multiple blogs related to the given li
 return the blog in plain text format with proper heading and sub-heading.
 
 Note:
-# Make sure the content is not repeated among the blogs and each blog that is generated should be unique.
-# blog content should be a string and render it in .md format and put \n instad of new line in the blog.
+# Do not add any disclaimers and any other remarks in the blog.
+# Make sure any information about the publisher of the original article is not mentioned.
+# Blog content should be a string and render it in .md format and put \n instad of new line in the blog.
 
 ### return the resoponse in the folloing JSON format:
+
 {
-    response: [
-        {
-            Title: <blog-Heading>,
-            Content: <ganerated-blog>,
-            Summary: <ganerated-blog-summary>,
-            Tags: [<tag1>, <tag2>, <tag3>],
-        },
-        {
-            Title: <blog-Heading>,
-            Content: <ganerated-blog>,
-            Summary: <ganerated-blog-summary>,
-            Tags: [<tag1>, <tag2>, <tag3>],
-        }
-    ]
+    Title: <blog-Heading>,
+    Content: <ganerated-blog>,
+    Summary: <ganerated-blog-summary>,
+    Tags: [<tag1>, <tag2>, <tag3>],
 }
 
 do not assign tags as a part of generated blog, provide them as an different field in the final response, 
@@ -67,8 +59,7 @@ and only provide json object in the response with no extra spaces and content or
     while True:
         try:
             response = get_completion(query)
-            response =  json.loads(response)
-            generated_blogs = response["response"]
+            generated_blogs =  json.loads(response)
             break
         except:
             print(response)
@@ -93,10 +84,10 @@ and only provide json object in the response with no extra spaces and content or
 
         skip_blog = False
         for score in similarity_scores:
-            if score > 0.8:
-                print(f"Skipping article: {blog['Title']} as similar article is already generated in the database.")
+            if score > 0.6:
+                print(f"Skipping article: {blog['Title']} as similar article is already generated in the database with a score of {score}.")
                 skip_blog = True
-                continue
+                break
 
         if skip_blog:
             continue

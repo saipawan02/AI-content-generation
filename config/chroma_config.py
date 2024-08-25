@@ -16,4 +16,5 @@ collection = client.get_or_create_collection(
     },
 )
 
+
 text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=1)
