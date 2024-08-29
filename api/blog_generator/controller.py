@@ -34,13 +34,7 @@ You are an AI assistant who will generate a blog related to the given list of ar
     footer = """
 return the blog in plain text format with proper heading and sub-heading.
 
-Note:
-# Do not add any disclaimers and any other remarks in the blog.
-# Make sure any information about the publisher of the original article is not mentioned.
-# Blog content should be a string and render it in .md format and put \n instad of new line in the blog.
-
-### return the resoponse in the folloing JSON format:
-
+### return the resoponse in the below JSON format:
 {
     Title: <blog-Heading>,
     Content: <ganerated-blog>,
@@ -48,8 +42,14 @@ Note:
     Tags: [<tag1>, <tag2>, <tag3>],
 }
 
-do not assign tags as a part of generated blog, provide them as an different field in the final response, 
-and only provide json object in the response with no extra spaces and content or any other characters.
+Note:
+# Do not add any disclaimers and any other remarks in the blog.
+# Make sure any information about the publisher of the original article is not mentioned.
+# Blog content should be a string and render it in .md format and put '\n' instad of new line in the blog.
+# Do not assign tags as a part of generated blog, provide them as an different field in the final response, 
+# Only provide json object in the response with no extra spaces and content or any other characters.
+# Format the complete content without any extra spaces, remove unsessary characters or special characters.
+# Make sure the content is divided in proper heading and sub-heading with # and ## respectively.
 """
 
     query = header + examples + footer

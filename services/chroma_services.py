@@ -14,6 +14,14 @@ def upload_article(article: Article):
         ids = str(uuid.uuid4())
     )
 
+def update_article(id:str, article: Article):
+    article = dict(article)
+
+    collection.update(
+        ids=id,
+        metadatas = article
+    )
+
 def get_similar_articles(article):
     docs_score = collection.query(
         query_texts=article, 
@@ -21,10 +29,13 @@ def get_similar_articles(article):
         )
     return docs_score
 
-def get_article_by_date(date: str):
+def get_article_by_date(date: str, to_publish: bool):
     # date = datetime.strptime(date, '%d-%m-%Y')
-    docs = collection.get(where={'Date': date})
-    return docs["metadatas"]
+    if to_publish == True:
+        docs = collection.get(where={'$and':[{'Date': date}, {'is_published': False}]})
+    else:
+        docs = collection.get(where={'Date': date})
+    return [docs["ids"], docs["metadatas"]]
 
 def get_all_articles():
     docs = collection.get()

@@ -27,8 +27,8 @@ routers are excluded as bolg generator and scrape articles are executed as corn 
 def check():
     return "Hey dev! This API endpoints are up and running."
 
-@_app.get('/articles/{date}')
-async def get_articles_by_date(date: str):
+@_app.get('/articles/{date}/to-publish/{to_publish}')
+async def get_articles_by_date(date: str, to_publish: bool = False):
     """
     Args:
         date (str, optional): The date for which the articles are to be fetched. Defaults to today's date.
@@ -42,10 +42,16 @@ async def get_articles_by_date(date: str):
             - Link: The URL of the article.
             - Content: The content of the article.
     """
-    articles =  chroma_services.get_article_by_date(date)
-    
+    id, articles =  chroma_services.get_article_by_date(date, to_publish)
+    print(id, articles)
+    if to_publish == True:
+        for id, article in zip(id, articles):
+            article["is_published"] = True
+            chroma_services.update_article(id, article)
+
     for article in articles:
         article["Tags"] = json.loads(article["Tags"] )
+
     return articles
 
 

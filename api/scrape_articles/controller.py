@@ -33,7 +33,7 @@ def scrape_article_url(urls: list[str]) -> list[Article]:
             similarity_scores = [0]
 
         for score in similarity_scores:
-            if score > 0.7:
+            if score > 0.6:
                 print(f"Skipping article: {article.Title} as similar article is already present in the database.")
                 continue
             else:
