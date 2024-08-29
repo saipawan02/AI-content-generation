@@ -37,8 +37,7 @@ add_action( 'custom_event', 'custom_cronjob' );
 
 function custom_cronjob() {
     // API URL
-    $api_url = 'http://165.232.76.215:3000/articles/'.date('d-m-Y');
-	
+    $api_url = 'http://165.232.76.215:3000/articles/'.date('d-m-Y').'/to-publish/true';
     $response = wp_remote_get($api_url);
 
     if (!is_wp_error($response) && $response['response']['code'] == 200) {
@@ -54,9 +53,13 @@ function custom_cronjob() {
                 // Construct the full image URL
                 $image_url = $base_image_url . $item['Image_id'];
 
-                // Modify content to make lines with ### bold or subheadings
+                // Modify content to make lines with ## subheadings
                 $modified_content = preg_replace('/^# (.*)$/m', '', $item['Content']);
-                $modified_content = preg_replace('/^## (.*)$/m', '<strong>$1</strong>', $modified_content);
+ 				$modified_content = preg_replace('/#{3,}/', '##',$modified_content);
+				if (preg_match('##', $modified_content)) {
+					$modified_content = preg_replace('/##/', '<br><br>##',$modified_content);
+				}
+                $modified_content = preg_replace('/## (.*)$/m', '<strong>$1</strong>', $modified_content);
 				
 				// Prepare post tags
                 $tags = array_map('sanitize_text_field', $item['Tags']); // Ensure tags are sanitized
@@ -109,6 +112,7 @@ function custom_cronjob() {
                     $image_id = custom_upload_image_from_url($image_url, $post_id);
                     error_log("Image ID: " . $image_id);
                     if ($image_id) {
+						set_post_thumbnail_size(500,500,false);
                         set_post_thumbnail($post_id, $image_id);
                         error_log("Post inserted successfully. Post ID: " . $post_id);
                     }    
