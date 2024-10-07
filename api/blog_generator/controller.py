@@ -76,19 +76,24 @@ Note:
     for blog in generated_blogs:
 
         # Check if the article is already present in the database
-        similarity_scores = dict(get_similar_articles(blog["Content"]))['distances'][0]
+        similarity_scores:list[float] = dict(get_similar_articles(blog["Content"]))['distances'][0]
+
+        print("similarity Scores: ", similarity_scores)
+
         if len(similarity_scores) == 0:
-            similarity_scores = [0]
+            similarity_scores = [0.0]
 
         skip_blog = False
         for score in similarity_scores:
-            if score > 0.6:
+            if score < 0.3:
                 print(f"Skipping article: {blog['Title']} as similar article is already generated in the database with a score of {score}.")
                 skip_blog = True
                 break
 
         if skip_blog:
             continue
+
+        print("Generated Article: ", blog)
 
         # Gnenerate image
         image_base64 = generate_image(blog['Title'])
