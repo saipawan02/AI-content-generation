@@ -2,7 +2,6 @@ import ssl
 from bs4 import BeautifulSoup
 import feedparser
 import requests
-from typing import List
 from datetime import datetime
 from models.Article import Article
 

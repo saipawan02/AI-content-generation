@@ -1,6 +1,6 @@
 import json
 
-from fastapi import APIRouter, Response
+from fastapi import APIRouter
 
 from .web_crawler import web_crawler
 from services.chroma_services import get_similar_articles, upload_article
