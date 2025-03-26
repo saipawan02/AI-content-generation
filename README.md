@@ -1,4 +1,9 @@
-# AI blog Generation API
+# AI Content Generation 
+This project aims to develop an automated system for generating and publishing news articles or blog posts using web scraping, similarity detection, and Large Language Models (LLMs). The system will operate on a scheduled basis, scraping articles from the web, determining if similar articles already exist, and generating new content based on the scraped information if deemed novel. The generated articles will then be published, along with AI-generated cover images.
+
+# FLow Diagram
+![AI Content Generator](AI-content-generator.png)
+
 
 ### Update cred.env
 Please update API keys and necessary information for OpenAI.
